@@ -1,18 +1,23 @@
 package com.example.SpringBoot6REST_API.SpringBoot6REST_API;
 
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -75,7 +80,52 @@ public class CustomerController {
     	//this will print of json format
     	return customerRepository.findById(cid);
     }
-    
+    ////////////////////////////////////////till here by me
+    @GetMapping("/customers")
+    @ResponseBody
+    public List<Customer> getAllCustomers() {
+        return customerRepository.findAll();
+    }
+
+    @GetMapping("/customer/{id}")
+    @ResponseBody
+    public ResponseEntity<Customer> getCustomerById(@PathVariable int id) {
+        return customerRepository.findById(id)
+                .map(customer -> new ResponseEntity<>(customer, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/createCustomer")
+    @ResponseBody
+    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
+        Customer savedCustomer = customerRepository.save(customer);
+        return new ResponseEntity<>(savedCustomer, HttpStatus.CREATED);
+    }
+
+
+    @PutMapping("/updateCustomer/{id}")
+    @ResponseBody
+    public ResponseEntity<Customer> updateCustomer(@PathVariable int id, @RequestBody Customer updatedCustomer) {
+        return customerRepository.findById(id)
+                .map(customer -> {
+                    customer.setCname(updatedCustomer.getCname());
+                    customer.setCmail(updatedCustomer.getCmail());
+                    Customer savedCustomer = customerRepository.save(customer);
+                    return new ResponseEntity<>(savedCustomer, HttpStatus.OK);
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @DeleteMapping("/deleteCustomer/{id}")
+    @ResponseBody
+    public ResponseEntity<Void> deleteCustomer(@PathVariable int id) {
+        return customerRepository.findById(id)
+                .map(customer -> {
+                    customerRepository.delete(customer);
+                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
 
 }
