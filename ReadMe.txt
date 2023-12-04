@@ -1,13 +1,22 @@
 https://www.youtube.com/watch?v=UfOxcrxhC0s&t=8469s
 
+ 
+_____________________________________________________________________
+ 
 Added h2 database
 search,display feature added
 http://localhost:8080/h2-console
 
-
+ 
+_____________________________________________________________________
+ 
 imp:
 Using REST api and post man 
 
+
+ 
+_____________________________________________________________________
+ 
 
 
 @ResponseBody:What it does: This annotation is used to indicate that the return value of a method 
@@ -26,7 +35,7 @@ When to use it: When you want to receive data from the client (e.g., a web brows
  
  
  
- -----------------
+_____________________________________________________________________
  
  
 
@@ -43,5 +52,7 @@ Add a new header:
 Key: Content-Type
 Value: application/json
 
-
+ 
+_____________________________________________________________________
+ 
 
