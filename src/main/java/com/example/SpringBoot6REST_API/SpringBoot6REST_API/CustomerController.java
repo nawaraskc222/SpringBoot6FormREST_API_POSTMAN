@@ -29,14 +29,14 @@ public class CustomerController {
 
 
     @Autowired
-    CustomerRepository customerRepository;
+    CustomerRepository repo;
 
     @GetMapping("/form")
     public String showForm() {
         return "customer-form.jsp";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/addCustomer")
     public String addCustomer(@RequestParam String cname,
     		@RequestParam String cmail,
     		@RequestParam int cid) {
@@ -46,7 +46,7 @@ public class CustomerController {
         customer.setCmail(cmail);
         System.out.println("Received form submission: name=" + cname + ", id=" + cid+"email="+cmail);
 
-        customerRepository.save(customer);
+        repo.save(customer);
         return "customer-form.jsp";
     }
 
@@ -57,7 +57,7 @@ public class CustomerController {
 
     @GetMapping("/get")
     public String getCustomerById(@RequestParam int cid, Model model) {
-        Customer customer = customerRepository.findById(cid).orElse(null);
+        Customer customer = repo.findById(cid).orElse(null);
         model.addAttribute("customer", customer);
         return "display-customer.jsp";
     }
@@ -69,7 +69,7 @@ public class CustomerController {
     @ResponseBody
     public List<Customer> getCustomer() {
     	//this will print of json format
-    	return customerRepository.findAll();
+    	return repo.findAll();
     }
     
     
@@ -78,19 +78,19 @@ public class CustomerController {
     public Optional<Customer> getCustomer2(@PathVariable( "cid")int cid) {
     	
     	//this will print of json format
-    	return customerRepository.findById(cid);
+    	return repo.findById(cid);
     }
-    ////////////////////////////////////////till here by me
+    ////////////////////////////////////////till here by me from here REST APIs///POST MAN
     @GetMapping("/customers")
     @ResponseBody
     public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+        return repo.findAll();
     }
 
     @GetMapping("/customer/{id}")
     @ResponseBody
     public ResponseEntity<Customer> getCustomerById(@PathVariable int id) {
-        return customerRepository.findById(id)
+        return repo.findById(id)
                 .map(customer -> new ResponseEntity<>(customer, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -98,7 +98,7 @@ public class CustomerController {
     @PostMapping("/createCustomer")
     @ResponseBody
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
-        Customer savedCustomer = customerRepository.save(customer);
+        Customer savedCustomer = repo.save(customer);
         return new ResponseEntity<>(savedCustomer, HttpStatus.CREATED);
     }
 
@@ -106,11 +106,12 @@ public class CustomerController {
     @PutMapping("/updateCustomer/{id}")
     @ResponseBody
     public ResponseEntity<Customer> updateCustomer(@PathVariable int id, @RequestBody Customer updatedCustomer) {
-        return customerRepository.findById(id)
+        return repo.findById(id)
                 .map(customer -> {
                     customer.setCname(updatedCustomer.getCname());
                     customer.setCmail(updatedCustomer.getCmail());
-                    Customer savedCustomer = customerRepository.save(customer);
+                    customer.setCid(updatedCustomer.getCid());
+                    Customer savedCustomer = repo.save(customer);
                     return new ResponseEntity<>(savedCustomer, HttpStatus.OK);
                 })
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -119,9 +120,9 @@ public class CustomerController {
     @DeleteMapping("/deleteCustomer/{id}")
     @ResponseBody
     public ResponseEntity<Void> deleteCustomer(@PathVariable int id) {
-        return customerRepository.findById(id)
+        return repo.findById(id)
                 .map(customer -> {
-                    customerRepository.delete(customer);
+                	repo.delete(customer);
                     return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
                 })
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));

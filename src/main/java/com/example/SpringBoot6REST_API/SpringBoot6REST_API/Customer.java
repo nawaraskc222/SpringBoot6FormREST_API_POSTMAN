@@ -2,6 +2,7 @@ package com.example.SpringBoot6REST_API.SpringBoot6REST_API;
 
 
 import jakarta.persistence.Entity;
+
 import jakarta.persistence.Id;
 
 @Entity

@@ -12,7 +12,8 @@
         <input type="submit" value="Search">
     </form>
     <br>
-    <a href="/customer/form">Add Customer</a>
+   
      <a href="/form">Add to form</a>
+     <a href="/search">Search Again</a>
 </body>
 </html>

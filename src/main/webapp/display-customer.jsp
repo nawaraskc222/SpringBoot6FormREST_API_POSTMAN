@@ -10,7 +10,7 @@
     <c:if test="${not empty customer}">
         <p>Name: ${customer.cname}</p>
         <p>ID: ${customer.cid}</p>
-         <p>ID: ${customer.cmail}</p>
+         <p>Email: ${customer.cmail}</p>
     </c:if>
     <br>
     <a href="/search">Search Again</a>
